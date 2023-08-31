@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwissCows Search</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      color: white;
+      overflow: hidden; /* Prevents scrollbars */
+    }
+    
+      /* Add styles for the video container */
+    .video-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1; /* Place the video behind other content */
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* Maintain aspect ratio and cover the entire container */
+    }
+
+    /* Adjust styles for the content container */
+    .container {
+      background-color: rgba(0, 0, 0, 0.5); /* Add a semi-transparent background overlay */
+      /* Your other styles here */
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .search-container {
+      position: relative;
+      max-width: 500px;
+    }
+
+    .search-bar {
+    display: flex;
+      width: 100%;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 30px;
+      background-color: rgba(0, 0, 0, 0.9);
+      color: white;
+      outline: none;
+      postion: relative;
+      margin-top: 30px;
+    }
+
+    .search-icon {
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      transform: translateY(-50%);
+    }
+
+    .encryption-locked {
+      position: center;
+      color: beige;
+      font-size: 30px;
+      margin-bottom: 30px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(-50px);
+      }
+
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    .search-bar-animation {
+      animation: fadeIn 1s ease, slideIn 1s ease;
+    }
+    
+    /* Add this CSS code in your <style> section */
+/* Add this CSS code in your <style> section */
+.switch-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+}
+
+/* Rest of your existing CSS styles for the switch */
+
+
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: '';
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.round {
+  border-radius: 34px;
+}
+
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .controls__group {
+      display: flex;
+      justify-content: space-between;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .button {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background-color 0.4s;
+    }
+
+    /* Media query for mobile */
+    @media (max-width: 649px) {
+      .controls {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 999;
+      }
+
+      .controls__group {
+        flex-direction: column;
+        align-items: center;
+        margin: 10px;
+      }
+
+      .button {
+        width: 100%;
+        border-radius: 9px;
+        margin: 5px 0;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+   <div class="video-container">
+     <video autoplay muted loop playbackRate="0.1"> <!-- Added playbackRate attribute -->
+    <source src="milky_way_glowing_at_night (720p).mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
+
+  <div class="container">
+    <div class="encryption-locked">Encryption Locked</div>
+    <div class="search-container">
+      <div class="search-icon">
+        <!-- Your search icon or image -->
+      </div>
+      <input type="text" id="searchInput" class="search-bar search-bar-animation" placeholder="Search">
+    </div>
+    <div class="switch-container">
+      <label class="switch">
+        <input type="checkbox" id="searchSwitch">
+        <span class="slider round"></span>
+      </label>
+      <span id="switchLabel">Ecosia</span>
+    </div>
+  </div>
+
+
+  <script>
+    
+    const searchInput = document.getElementById('searchInput');
+    const searchSwitch = document.getElementById('searchSwitch');
+    const switchLabel = document.getElementById('switchLabel');
+
+    searchInput.addEventListener('keypress', function (event) {
+      if (event.key === 'Enter') {
+        performSearch();
+      }
+    });
+
+    searchSwitch.addEventListener('change', function () {
+      if (searchSwitch.checked) {
+        switchLabel.textContent = 'SwissCows';
+      } else {
+        switchLabel.textContent = 'Ecosia';
+      }
+    });
+
+    function performSearch() {
+      const searchQuery = searchInput.value;
+      const selectedEngine = searchSwitch.checked ? 'swisscows' : 'ecosia';
+      if (searchQuery.trim() !== '') {
+        let searchUrl = '';
+        if (selectedEngine === 'ecosia') {
+          searchUrl = `https://www.ecosia.org/search?q=${encodeURIComponent(searchQuery)}`;
+        } else {
+          searchUrl = `https://www.swisscows.com/web?query=${encodeURIComponent(searchQuery)}`;
+        }
+        window.open(searchUrl, '_blank');
+      }
+    }
+  </script>
+ <div style="position: fixed; bottom: 10px; right: 10px;">
+        <a href="ByMeACoffee.html">
+            <img src="coffee-cup.png" alt="Coffee Cup Icon" width="40" height="40">
+        </a>
+    </div>
+</body>
+
+</html>
+
